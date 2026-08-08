@@ -1,0 +1,25 @@
+# Blackjack (C++ / SFML 3)
+
+A desktop Blackjack game built in C++ with SFML 3 for rendering, card sprites, and animation.
+
+Originally built as a team project for a CS class; the graphics implementation, texture management, and animation architecture in this repo are my own work, done independently after the course ended.
+
+## Technical Highlights
+
+- **Texture lifetime management** — tracked down and fixed dangling sprite references caused by textures being destroyed while sprites still held pointers to them.
+- **Memory leak fix** — resolved leaks caused by reloading textures from disk on every round reset instead of reusing already-loaded textures.
+- **Event-driven architecture** — replaced a blocking input loop with an event-driven design so the game stays responsive instead of freezing while waiting for input.
+- **Non-blocking dealer animation** — implemented a dealer draw animation with a post-round wait state, instead of resolving the dealer's turn instantly.
+
+## Known Limitations
+
+- The dealer's turn currently resolves without a pause between card reveals — cards appear instantly instead of being dealt with a delay, so it's hard to follow what the dealer is drawing or how the round is playing out in real time. Adding timed reveals to the dealer sequence is the next planned improvement.
+
+## Built With
+
+- C++
+- SFML 3.x
+
+## Assets
+
+Card sprites and font located in `Sprites/` and `Fonts/`.
