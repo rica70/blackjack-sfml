@@ -6843,6 +6843,11 @@
 			path = Sprites;
 			sourceTree = "<group>";
 		};
+		8EAC45D130271F4800CAFC4D /* Screenshots */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Screenshots;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -6864,6 +6869,7 @@
 			children = (
 				8E827E7B2FABD1A400B81D25 /* Sprites */,
 				8E5D60A72FAC29A10097A951 /* Fonts */,
+				8EAC45D130271F4800CAFC4D /* Screenshots */,
 				8E70E51C2F9FECB000F5B754 /* final proj test */,
 				8E8260822FABBD3F00B81D25 /* Frameworks */,
 				8EAC44793026F0F500CAFC4D /* .gitignore */,
@@ -20576,6 +20582,7 @@
 				8E5D60A72FAC29A10097A951 /* Fonts */,
 				8E70E51C2F9FECB000F5B754 /* final proj test */,
 				8E827E7B2FABD1A400B81D25 /* Sprites */,
+				8EAC45D130271F4800CAFC4D /* Screenshots */,
 			);
 			name = "final proj test";
 			packageProductDependencies = (
