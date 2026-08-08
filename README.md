@@ -11,10 +11,6 @@ Originally built as a team project for a CS class; the graphics implementation, 
 - **Event-driven architecture** — replaced a blocking input loop with an event-driven design so the game stays responsive instead of freezing while waiting for input.
 - **Non-blocking dealer animation** — implemented a dealer draw animation with a post-round wait state, instead of resolving the dealer's turn instantly.
 
-## Known Limitations
-
-- The dealer's turn currently resolves without a pause between card reveals — cards appear instantly instead of being dealt with a delay, so it's hard to follow what the dealer is drawing or how the round is playing out in real time. Adding timed reveals to the dealer sequence is the next planned improvement.
-
 ## Built With
 
 - C++
