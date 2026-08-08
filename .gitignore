@@ -8,8 +8,7 @@ cmake-build-*/
 *.app
 
 # Xcode
-*.xcodeproj/xcuserdata/
-*.xcworkspace/xcuserdata/
+xcuserdata/
 DerivedData/
 *.pbxuser
 *.mode1v3
