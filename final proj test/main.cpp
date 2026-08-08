@@ -19,6 +19,7 @@ int main() {
     float windowHeight = 700.f;
     sf::RenderWindow window(sf::VideoMode({800, 700}), "My window");
     window.setFramerateLimit(30);
+    sf::Clock myClock;
     
     sf::Texture texture("Sprites/clubs_2.png");
     
@@ -79,9 +80,9 @@ int main() {
     Deck* myDeckptr = NULL;
     Hand* myHandptr = NULL;
     Hand* DeealersHandPtr = NULL;
-    int cardIndex = 47;
     int hitClicked = 0;
     bool gameOver = false;
+    bool dealersTurn = false;
     int Winning = 0;
     int losing = 0;
     
@@ -114,7 +115,7 @@ int main() {
     });
     
     sf::Texture dt3;
-    (void)dt2.loadFromFile(backImage);
+    (void)dt3.loadFromFile(placeholder);
     
     sf::Sprite ds3(dt3);
     ds3.scale(sf::Vector2f(0.35f, 0.35f));
@@ -180,12 +181,16 @@ int main() {
     
     while (window.isOpen())
     {
+        PlayerScore.setString(to_string(myHandptr->GetHandValue()));
+        if (dealersTurn)
+            DealerScore.setString(to_string(DeealersHandPtr->GetHandValue()));
+        else
+            DealerScore.setString(to_string(DeealersHandPtr->GetHandValueIndex(0)));
+        wonScore.setString(to_string(Winning));
+        lostScore.setString(to_string(losing));
+        
         while (const std::optional event = window.pollEvent())
         {
-            PlayerScore.setString(to_string(myHandptr->GetHandValue()));
-            DealerScore.setString(to_string(DeealersHandPtr->GetHandValueIndex(0)));
-            wonScore.setString(to_string(Winning));
-            lostScore.setString(to_string(losing));
             
             if (event->is<sf::Event::Closed>())
                 window.close();
@@ -224,76 +229,23 @@ int main() {
                         }
                         else if (myHandptr->GetHandValue() == 21)
                         {
-                            while (DeealersHandPtr->GetHandValue() < 17)
-                            {
-                                cout << "dealer adds card" << endl;
-                                *DeealersHandPtr += myDeckptr->dealCard();
-                                if(DeealersHandPtr->getHandSize() == 3)
-                                {
-                                    (void)dt3.loadFromFile(DeealersHandPtr->getCardPathname(2));
-                                }
-                                
-                            }
-                            
-                            if(myHandptr->GetHandValue() != DeealersHandPtr->GetHandValue())
-                            {
-                                cout <<" u win blackjack" << endl;
-                                Winning++;
-                            }
-                            else
-                            {
-                                cout << "push on blackjack" << endl;
-                            }
-                            
-                            gameOver = true;
+                            //dealers turn
+                            dealersTurn = true;
+                            myClock.restart();
+                            (void)dt2.loadFromFile(DeealersHandPtr->getCardPathname(1));
                         }
                             
-                        
-                        cardIndex--;
                         break;
+                        
                     case sf::Keyboard::Key::Num2:
                         //stand
                         cout << "stand" << endl;
-                        //runs until 17+
                         
-                        DealerScore.setString(to_string(DeealersHandPtr->GetHandValue()));
+                        //dealersturn
+                        dealersTurn = true;
+                        myClock.restart();
+                        (void)dt2.loadFromFile(DeealersHandPtr->getCardPathname(1));
                         
-                        while (DeealersHandPtr->GetHandValue() < 17)
-                        {
-                            cout << "dealer adds card" << endl;
-                            *DeealersHandPtr += myDeckptr->dealCard();
-                            if(DeealersHandPtr->getHandSize() == 3)
-                            {
-                                (void)dt3.loadFromFile(DeealersHandPtr->getCardPathname(2));
-                            }
-                            
-                        }
-                        
-                        // condition for dealer
-                        if (DeealersHandPtr->GetHandValue() > 21)
-                        {
-                            cout << "Dealer Busts you win" << endl;
-                            Winning++;
-                            gameOver= true;
-                        }
-                        else if (DeealersHandPtr->GetHandValue() > myHandptr->GetHandValue())
-                        {
-                            cout << "You lose dealer wins" << endl;
-                            losing++;
-
-                            gameOver = true;
-                        }
-                        else if (myHandptr->GetHandValue() > DeealersHandPtr->GetHandValue())
-                        {
-                            cout << "you win" << endl;
-                            Winning++;
-                            gameOver = true;
-                        }
-                        else
-                        {
-                            cout << "Push tie" << endl;
-                            gameOver = true;
-                        }
 
                         break;
                     case sf::Keyboard::Key::Num3:
@@ -311,10 +263,56 @@ int main() {
                 
         }
         
+        
+        if (dealersTurn && myClock.getElapsedTime() > sf::seconds(1))
+        {
+            
+            if (DeealersHandPtr->GetHandValue() < 17)
+            {
+                cout << "dealer adds card" << endl;
+                *DeealersHandPtr += myDeckptr->dealCard();
+                if(DeealersHandPtr->getHandSize() == 3)
+                {
+                    (void)dt3.loadFromFile(DeealersHandPtr->getCardPathname(2));
+                }
+                
+            }
+            else
+            {
+                // condition for dealer
+                if (DeealersHandPtr->GetHandValue() > 21)
+                {
+                    cout << "Dealer Busts you win" << endl;
+                    Winning++;
+                }
+                else if (DeealersHandPtr->GetHandValue() > myHandptr->GetHandValue())
+                {
+                    cout << "You lose dealer wins" << endl;
+                    losing++;
+                }
+                else if (myHandptr->GetHandValue() > DeealersHandPtr->GetHandValue())
+                {
+                    cout << "you win" << endl;
+                    Winning++;
+                }
+                else
+                {
+                    cout << "Push tie" << endl;
+                }
+                
+                gameOver = true;
+                dealersTurn = false;
+                
+            }
+            
+            myClock.restart();
+            
+        }
+        
+        
         if (gameOver)
         {
             hitClicked = 0;
-            cardIndex = 47;
             
             StartGame(myDeckptr, myHandptr, DeealersHandPtr);
             
@@ -370,7 +368,6 @@ void StartGame(Deck*& d, Hand*& mh, Hand*& dh)
     dh = new Hand;
     
     d->shuf();
-    d->print();
     
     mh->AddCard(d->dealCard());
     dh->AddCard(d->dealCard());
