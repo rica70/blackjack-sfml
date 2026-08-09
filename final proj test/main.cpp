@@ -83,6 +83,7 @@ int main() {
     int hitClicked = 0;
     bool gameOver = false;
     bool dealersTurn = false;
+    bool allowKeyPress = true;
     int Winning = 0;
     int losing = 0;
     
@@ -197,67 +198,73 @@ int main() {
             
             if (const auto* keyPress = event->getIf<sf::Event::KeyPressed>())
             {
-                switch (keyPress->code)
+                if (allowKeyPress)
                 {
-                    case sf::Keyboard::Key::Escape:
-                        window.close();
-                        break;
-                    case sf::Keyboard::Key::Num1:
-                        //hit
-                        cout << "HIT" << endl;
-                        myHandptr->AddCard(myDeckptr->dealCard());
-                        hitClicked++;
-                        if (hitClicked == 1)
-                        {
-                            (void)pt3.loadFromFile(myHandptr->getCardPathname(2));
-                        }
-                        else if (hitClicked == 2)
-                        {
-                            (void)pt4.loadFromFile(myHandptr->getCardPathname(3));
-                        }
-                        else if (hitClicked == 3)
-                        {
-                            (void)pt5.loadFromFile(myHandptr->getCardPathname(4));
-                        }
-                        
-                        if (myHandptr->GetHandValue() > 21)
-                        {
-                            cout << "u lose" << endl;
-                            cout << myHandptr->GetHandValue();
-                            losing++;
-                            gameOver = true;
-                        }
-                        else if (myHandptr->GetHandValue() == 21)
-                        {
-                            //dealers turn
+                    switch (keyPress->code)
+                    {
+                        case sf::Keyboard::Key::Escape:
+                            window.close();
+                            break;
+                        case sf::Keyboard::Key::Num1:
+                            //hit
+                            cout << "HIT" << endl;
+                            myHandptr->AddCard(myDeckptr->dealCard());
+                            hitClicked++;
+                            if (hitClicked == 1)
+                            {
+                                (void)pt3.loadFromFile(myHandptr->getCardPathname(2));
+                            }
+                            else if (hitClicked == 2)
+                            {
+                                (void)pt4.loadFromFile(myHandptr->getCardPathname(3));
+                            }
+                            else if (hitClicked == 3)
+                            {
+                                (void)pt5.loadFromFile(myHandptr->getCardPathname(4));
+                            }
+                            
+                            if (myHandptr->GetHandValue() > 21)
+                            {
+                                cout << "u lose" << endl;
+                                cout << myHandptr->GetHandValue();
+                                losing++;
+                                gameOver = true;
+                            }
+                            else if (myHandptr->GetHandValue() == 21)
+                            {
+                                //dealers turn
+                                dealersTurn = true;
+                                allowKeyPress = false;
+                                myClock.restart();
+                                (void)dt2.loadFromFile(DeealersHandPtr->getCardPathname(1));
+                            }
+                                
+                            break;
+                            
+                        case sf::Keyboard::Key::Num2:
+                            //stand
+                            cout << "stand" << endl;
+                            
+                            //dealersturn
                             dealersTurn = true;
+                            allowKeyPress = false;
                             myClock.restart();
                             (void)dt2.loadFromFile(DeealersHandPtr->getCardPathname(1));
-                        }
                             
-                        break;
-                        
-                    case sf::Keyboard::Key::Num2:
-                        //stand
-                        cout << "stand" << endl;
-                        
-                        //dealersturn
-                        dealersTurn = true;
-                        myClock.restart();
-                        (void)dt2.loadFromFile(DeealersHandPtr->getCardPathname(1));
-                        
 
-                        break;
-                    case sf::Keyboard::Key::Num3:
-                        //double
-                        cout << "doub" << endl;
-                        break;
-                    case sf::Keyboard::Key::Num4:
-                        //split
-                        cout << "split" << endl;
-                        break;
-                    default:
-                        break;
+                            break;
+                        case sf::Keyboard::Key::Num3:
+                            //double
+                            cout << "doub" << endl;
+                            break;
+                        case sf::Keyboard::Key::Num4:
+                            //split
+                            cout << "split" << endl;
+                            break;
+                        default:
+                            break;
+                    }
+
                 }
             }
                 
@@ -302,6 +309,7 @@ int main() {
                 
                 gameOver = true;
                 dealersTurn = false;
+                allowKeyPress = true;
                 
             }
             
